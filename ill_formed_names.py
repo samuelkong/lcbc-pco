@@ -1,8 +1,5 @@
-import configparser
 import pco
 
-config = configparser.ConfigParser()
-config.read(['config.ini', 'my_config.ini'])
 
 def valid_first_name(first_name):
 	if (first_name == None):
@@ -13,6 +10,7 @@ def valid_first_name(first_name):
 		return False
 	return True
 
+
 def valid_given_name(given_name):
 	if (given_name == None):
 		return True
@@ -22,8 +20,10 @@ def valid_given_name(given_name):
 		return False
 	return True
 
+
 def valid_last_name(last_name):
 	return valid_first_name(last_name)
+
 
 def valid_middle_name(middle_name):
 	if (middle_name == None):
@@ -31,6 +31,7 @@ def valid_middle_name(middle_name):
 	if (not valid_name(middle_name)):
 		return False
 	return True
+
 
 def valid_name(name):
 	if (not name[0].isalpha()):
@@ -41,6 +42,7 @@ def valid_name(name):
 		return False
 	return True
 
+
 def valid_nickname(nickname):
 	if (nickname == None):
 		return True
@@ -50,9 +52,10 @@ def valid_nickname(nickname):
 		return False
 	return True
 
+
 print('Users with ill-formed names:')
 
-api = pco.api(config)
+api = pco.api()
 
 data = api.people.people.search()
 

@@ -1,9 +1,10 @@
+from . import config
 from . import request
 from urllib.parse import urlencode
 
 
 class PcoApi():
-	def __init__(self, config):
+	def __init__(self):
 		products = [
 		#	'calendar',
 			'check_ins',
@@ -16,12 +17,11 @@ class PcoApi():
 		]
 
 		for product in products:
-			setattr(self, product, PcoProductApi(config, product))
+			setattr(self, product, PcoProductApi(product))
 
 
 class PcoEndpointApi():
-	def __init__(self, config, name, url):
-		self.config = config
+	def __init__(self, name, url):
 		self.name = name
 		self.url = url
 
@@ -32,7 +32,7 @@ class PcoEndpointApi():
 
 	def search(self, params={}, return_all=True):
 		if return_all == True:
-			params['per_page'] = self.config['DEFAULT']['max_page_size']
+			params['per_page'] = config.PcoConfig.get('REQUEST', 'max_page_size')
 
 		query = urlencode(params)
 
@@ -51,8 +51,7 @@ class PcoEndpointApi():
 
 
 class PcoProductApi():
-	def __init__(self, config, product):
-		self.config = config
+	def __init__(self, product):
 		self.name = product;
 
 		links = self.get_links()
@@ -67,13 +66,13 @@ class PcoProductApi():
 			if name == 'self':
 				continue
 
-			setattr(self, name, PcoEndpointApi(self.config, name, url))
+			setattr(self, name, PcoEndpointApi(name, url))
 
 	def get_links(self):
 		if hasattr(self, 'links'):
 			return self.links
 
-		endpoint = self.config['ENDPOINT'][self.name + '_url']
+		endpoint = config.PcoConfig.get('ENDPOINT', self.name + '_url')
 
 		response = request.PcoRequest.get(endpoint)
 
@@ -82,7 +81,5 @@ class PcoProductApi():
 		return self.links
 
 
-def api(config):
-	request.PcoRequest.init(config['DEFAULT']['client_id'], config['DEFAULT']['secret'])
-
-	return PcoApi(config)
+def api():
+	return PcoApi()

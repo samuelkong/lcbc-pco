@@ -3,8 +3,7 @@ from . import request
 class PcoPerson():
 	json = {}
 
-	def __init__(self, config, json):
-		self.config = config
+	def __init__(self, json):
 		self.json = json
 
 	def __getattr__(self, name):

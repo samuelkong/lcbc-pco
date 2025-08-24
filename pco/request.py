@@ -1,17 +1,22 @@
 import requests
 import time
 
+from . import config
+
 
 class PcoRequest:
 	request_rate_count = 0
-	request_rate_limit = 100
-	request_rate_period = 20
+	request_rate_limit = config.PcoConfig.getint('REQUEST', 'request_rate_limit')
+	request_rate_period = config.PcoConfig.getint('REQUEST', 'request_rate_period')
 
 	def get(url):
+		client_id = config.PcoConfig.get('AUTH', 'client_id')
+		secret = config.PcoConfig.get('AUTH', 'secret')
+
 		try:
 			PcoRequest.throttle()
 
-			response = requests.get(url, auth=(PcoRequest.client_id, PcoRequest.secret))
+			response = requests.get(url, auth=(client_id, secret))
 
 			if (PcoRequest.reached_rate_limit(response)):
 				return PcoRequest.fetch(url)
@@ -23,10 +28,6 @@ class PcoRequest:
 			return response.json()
 		except requests.exceptions.RequestException as e:
 			print('ERROR:', e)
-
-	def init(client_id, secret):
-		PcoRequest.client_id = client_id
-		PcoRequest.secret = secret
 
 	def reached_rate_limit(response):
 		if (response.status_code != requests.codes.too_many_requests):
