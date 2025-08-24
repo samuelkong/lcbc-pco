@@ -54,7 +54,7 @@ print('Users with ill-formed names:')
 
 api = pco.api(config)
 
-data = api.people.people.search({}, True)
+data = api.people.people.search()
 
 ill_form_count = 0;
 
