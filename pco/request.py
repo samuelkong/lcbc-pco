@@ -1,35 +1,34 @@
 import requests
 import time
 
-class PcoMeteredApi:
+
+class PcoRequest:
 	request_rate_count = 0
 	request_rate_limit = 100
 	request_rate_period = 20
 
-	def __init__(self, config):
-		self.config = config
-		self.client_id = config['DEFAULT']['client_id']
-		self.secret = config['DEFAULT']['secret']
-
-
-	def fetch(self, url):
+	def get(url):
 		try:
-			self.throttle()
+			PcoRequest.throttle()
 
-			response = requests.get(url, auth=(self.client_id, self.secret))
+			response = requests.get(url, auth=(PcoRequest.client_id, PcoRequest.secret))
 
-			if self.reached_rate_limit(response):
-				return self.fetch(url)
+			if (PcoRequest.reached_rate_limit(response)):
+				return PcoRequest.fetch(url)
 
 			response.raise_for_status()
 
-			self.record_header(response)
+			PcoRequest.record_header(response)
 
 			return response.json()
 		except requests.exceptions.RequestException as e:
 			print('ERROR:', e)
 
-	def reached_rate_limit(self, response):
+	def init(client_id, secret):
+		PcoRequest.client_id = client_id
+		PcoRequest.secret = secret
+
+	def reached_rate_limit(response):
 		if (response.status_code != requests.codes.too_many_requests):
 			return False
 
@@ -41,23 +40,26 @@ class PcoMeteredApi:
 
 		return TRUE
 
-	def record_header(self, response):
-		PcoMeteredApi.request_rate_count = int(response.headers['X-PCO-API-Request-Rate-Count'])
-		PcoMeteredApi.request_rate_limit = int(response.headers['X-PCO-API-Request-Rate-Limit'])
-		PcoMeteredApi.request_rate_period = int(response.headers['X-PCO-API-Request-Rate-Period'])
+	def record_header(response):
+		PcoRequest.request_rate_count = int(
+			response.headers['X-PCO-API-Request-Rate-Count'])
+		PcoRequest.request_rate_limit = int(
+			response.headers['X-PCO-API-Request-Rate-Limit'])
+		PcoRequest.request_rate_period = int(
+			response.headers['X-PCO-API-Request-Rate-Period'])
 
-	def throttle(self):
-		if PcoMeteredApi.request_rate_count < (PcoMeteredApi.request_rate_limit * 0.9):
+	def throttle():
+		if (PcoRequest.request_rate_count < (PcoRequest.request_rate_limit * 0.85)):
 			return
 
-		rate_per_sec = PcoMeteredApi.request_rate_limit / PcoMeteredApi.request_rate_period
-		rate_recovery_amount = 0.1 * PcoMeteredApi.request_rate_limit
+		rate_per_sec = PcoRequest.request_rate_limit / PcoRequest.request_rate_period
+		rate_recovery_amount = 0.15 * PcoRequest.request_rate_limit
 
 		time_to_sleep = rate_recovery_amount / rate_per_sec
 
-		print('WARN: Throttling: ' +
-			  f'count={PcoMeteredApi.request_rate_count} ' +
-			  f'limit={PcoMeteredApi.request_rate_limit} ' +
-			  f'sleep={time_to_sleep}')
+		print(
+			f'WARN: Throttling: count={PcoRequest.request_rate_count} ' +
+			f'limit={PcoRequest.request_rate_limit} sleep={time_to_sleep}'
+		)
 
 		time.sleep(time_to_sleep)

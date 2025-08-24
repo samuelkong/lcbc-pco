@@ -1,24 +1,32 @@
 from . import request
 from urllib.parse import urlencode
 
+
 class PcoApi():
 	def __init__(self, config):
-		#products = [ 'calendar', 'check_ins', 'giving', 'groups', 'people', 'publishing',
-		#			  'registrations', 'services' ]
-		products = ['check_ins', 'people']
+		products = [
+		#	'calendar',
+			'check_ins',
+		#	'giving',
+		#	'groups',
+			'people',
+		#	'publishing',
+		#	'registrations',
+		#	'services'
+		]
 
 		for product in products:
 			setattr(self, product, PcoProductApi(config, product))
 
-class PcoEndpointApi(request.PcoMeteredApi):
-	def __init__(self, config, name, url):
-		super().__init__(config)
 
+class PcoEndpointApi():
+	def __init__(self, config, name, url):
+		self.config = config
 		self.name = name
 		self.url = url
 
 	def get(self, id):
-		response = self.fetch(self.url + '/' + str(id))
+		response = request.PcoRequest.get(self.url + '/' + str(id))
 
 		return response['data']
 
@@ -28,7 +36,7 @@ class PcoEndpointApi(request.PcoMeteredApi):
 
 		query = urlencode(params)
 
-		response = self.fetch(self.url + '?' + query)
+		response = request.PcoRequest.get(self.url + '?' + query)
 
 		response_data = response['data']
 
@@ -41,10 +49,10 @@ class PcoEndpointApi(request.PcoMeteredApi):
 
 		return response_data
 
-class PcoProductApi(request.PcoMeteredApi):
-	def __init__(self, config, product):
-		super().__init__(config)
 
+class PcoProductApi():
+	def __init__(self, config, product):
+		self.config = config
 		self.name = product;
 
 		links = self.get_links()
@@ -67,11 +75,14 @@ class PcoProductApi(request.PcoMeteredApi):
 
 		endpoint = self.config['ENDPOINT'][self.name + '_url']
 
-		response = self.fetch(endpoint)
+		response = request.PcoRequest.get(endpoint)
 
 		self.links = response['data']['links']
 
 		return self.links
 
+
 def api(config):
+	request.PcoRequest.init(config['DEFAULT']['client_id'], config['DEFAULT']['secret'])
+
 	return PcoApi(config)

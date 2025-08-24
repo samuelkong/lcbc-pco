@@ -1,11 +1,10 @@
 from . import request
 
-class PcoPerson(request.PcoMeteredApi):
+class PcoPerson():
 	json = {}
 
 	def __init__(self, config, json):
-		super().__init__(config)
-
+		self.config = config
 		self.json = json
 
 	def __getattr__(self, name):
