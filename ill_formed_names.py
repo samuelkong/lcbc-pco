@@ -55,35 +55,34 @@ def valid_nickname(nickname):
 
 print('Users with ill-formed names:')
 
-data = pco.PcoPerson.search()
-
 ill_form_count = 0;
 
-for datum in data:
-	if (valid_first_name(datum['attributes']['first_name']) and
-		valid_last_name(datum['attributes']['last_name']) and
-		valid_middle_name(datum['attributes']['middle_name']) and
-		valid_given_name(datum['attributes']['given_name']) and
-		valid_nickname(datum['attributes']['nickname'])):
+result = pco.PcoPerson.search()
+
+for person in result:
+	if (valid_first_name(person.first_name) and
+		valid_last_name(person.last_name) and
+		valid_middle_name(person.middle_name) and
+		valid_given_name(person.given_name) and
+		valid_nickname(person.nickname)):
 
 		continue
 
 	ill_form_count += 1
 
-	full_name = datum['attributes']['first_name']
+	full_name = person.first_name
 
-	if datum['attributes']['given_name'] != None:
-		full_name += ' (' + datum['attributes']['given_name'] + ')'
+	if (person.given_name != None):
+		full_name += f' ({person.given_name})'
 
-	if datum['attributes']['nickname'] != None:
-		full_name += ' "' + datum['attributes']['nickname'] + '"'
+	if (person.nickname != None):
+		full_name += f' "{person.nickname}"'
 
-	if datum['attributes']['middle_name'] != None:
-		full_name += ' ' + datum['attributes']['middle_name']
+	if (person.middle_name != None):
+		full_name += f' {person.middle_name}'
 
-	full_name += ' ' + datum['attributes']['last_name']
-	full_name += '    {' + datum['id'] + '}'
+	full_name += f' {person.last_name}    {{{person.id}}}'
 
 	print(full_name)
 
-print(f'\nCount: {ill_form_count}/{len(data)}')
+print(f'\nCount: {ill_form_count}/{len(result)}')
