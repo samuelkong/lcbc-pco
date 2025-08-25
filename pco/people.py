@@ -1,7 +1,10 @@
 from . import api as pco_api
+from . import cache
 
 
 class PcoPerson():
+	TYPE = 'Person'
+
 	json = {}
 
 	def __init__(self, json):
@@ -17,13 +20,18 @@ class PcoPerson():
 		return None
 
 	def get(id):
+		data = cache.PcoCache.get(PcoPerson.TYPE, id)
+
+		if (data != None):
+=			return PcoPerson(data)
+
 		api = pco_api.PcoApi.get_instance()
 
 		data = api.people.people.get(id)
 
-		person = PcoPerson(data)
+		cache.PcoCache.put(data)
 
-		return person
+		return PcoPerson(data)
 
 	def search(params={}):
 		result = []
@@ -33,6 +41,8 @@ class PcoPerson():
 		data = api.people.people.search(params)
 
 		for datum in data:
+			cache.PcoCache.put(datum)
+
 			person = PcoPerson(datum);
 
 			result.append(person)
