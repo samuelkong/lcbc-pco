@@ -55,9 +55,7 @@ def valid_nickname(nickname):
 
 print('Users with ill-formed names:')
 
-api = pco.api()
-
-data = api.people.people.search()
+data = pco.PcoPerson.search()
 
 ill_form_count = 0;
 

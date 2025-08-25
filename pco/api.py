@@ -4,7 +4,12 @@ from urllib.parse import urlencode
 
 
 class PcoApi():
-	def __init__(self):
+	instance = None
+
+	def get_instance():
+		if (PcoApi.instance != None):
+			return PcoApi.instance
+
 		products = [
 		#	'calendar',
 			'check_ins',
@@ -16,8 +21,14 @@ class PcoApi():
 		#	'services'
 		]
 
+		instance = PcoApi()
+
 		for product in products:
-			setattr(self, product, PcoProductApi(product))
+			setattr(instance, product, PcoProductApi(product))
+
+		PcoApi.instance = instance
+
+		return PcoApi.instance
 
 
 class PcoEndpointApi():
@@ -79,7 +90,3 @@ class PcoProductApi():
 		self.links = response['data']['links']
 
 		return self.links
-
-
-def api():
-	return PcoApi()
