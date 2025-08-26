@@ -4,8 +4,6 @@ import pco
 def valid_first_name(first_name):
 	if (first_name == None):
 		return False
-	if len(first_name) <= 1:
-		return False
 	if (not valid_name(first_name)):
 		return False
 	return True
