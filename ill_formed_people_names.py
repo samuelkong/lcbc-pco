@@ -6,6 +6,10 @@ def valid_first_name(first_name):
 		return False
 	if (not valid_name(first_name)):
 		return False
+	if (first_name.find('"') >= 0):
+		return False
+	if (first_name.find("'") >= 0):
+		return False
 	return True
 
 
