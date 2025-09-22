@@ -3,10 +3,10 @@ import csv
 from datetime import date
 
 
-household_csv_filename = 'in/test-samuel-kong-ss-check-ins-2025-09-03.csv'
+household_csv_filename = 'in/ss-check-ins.csv'
 trusted_csv_filename = 'in/trusted-people.csv'
-html_header_filename = 'in/header.html'
-html_footer_filename = 'in/footer.html'
+html_header_filename = 'tpl/header.html'
+html_footer_filename = 'tpl/footer.html'
 output_filename = 'out/out.html'
 
 
