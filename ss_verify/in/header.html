@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<title>SS Verify</title>
+<style>
+* {
+	margin: 0;
+	padding: 0;
+}
+body {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+}
+h3 {
+	font-size: 110%;
+	text-decoration: underline;
+}
+label {
+	display: inline-block;
+	width: 16ch;
+}
+label:after {
+	content: ": ";
+}
+.child {
+	padding-bottom: 1.0ch;
+}
+.household {
+	border-bottom: solid 1px black;
+}
+.intro {
+	padding-bottom: 1.0ch;
+}
+.section-adults {
+	float: right;
+	width: 49%;
+}
+.section-children {
+	float: left;
+	width: 49%;
+}
+.section-trusted-people {
+	clear: both;
+}
+@media print {
+	.household {
+		border: 0;
+		break-after: page;
+	}
+}
+</style>
+<body>
