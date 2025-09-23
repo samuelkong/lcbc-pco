@@ -1,6 +1,8 @@
 import csv
+import sys
 
 from datetime import date
+from pathlib import Path
 
 
 household_csv_filename = 'in/ss-check-ins.csv'
@@ -35,6 +37,23 @@ def str_to_bool(str):
 	return str.lower() in ['1', 't', 'true', 'y', 'yes']
 
 
+if (not Path(household_csv_filename).is_file()):
+	print(
+		f'Please add the file {household_csv_filename}. The file should be be a CSV ' +
+		'export from a PCO People List'
+	)
+
+	sys.exit()
+
+if (not Path(trusted_csv_filename).is_file()):
+	print(
+		f'Please add the file {trusted_csv_filename}. The file should be be a CSV with ' +
+		'columns for Household ID, Person ID, First Name, Last Name, and Mobile Phone ' +
+		'Number'
+	)
+
+	sys.exit()
+
 households = {}
 
 with open(household_csv_filename, encoding='utf-8', newline='') as household_csv_file:
@@ -54,8 +73,6 @@ with open(household_csv_filename, encoding='utf-8', newline='') as household_csv
 			households[household_id]['children'].append(row)
 		else:
 			households[household_id]['adults'].append(row)
-
-		print(row['Person ID'], row['First Name'], row['Last Name'], row['Household ID'])
 
 with open(trusted_csv_filename, encoding='utf-8', newline='') as trusted_csv_file:
 	reader = csv.DictReader(trusted_csv_file)
@@ -175,3 +192,5 @@ with open(html_footer_filename, encoding='utf-8') as footer_file:
 	footer = footer_file.read()
 with open(output_filename, mode='w', encoding='utf-8') as output_file:
 	output_file.write(header + '\n' +output + '\n' + footer)
+
+print(f'Output at {output_filename}')

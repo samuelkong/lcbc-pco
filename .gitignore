@@ -1,6 +1,6 @@
 __pycache__
 
-my_config.ini
+/my_config.ini
 
-ss_verify/in/
-ss_verify/out/
+/ss_verify/in/
+/ss_verify/out/
