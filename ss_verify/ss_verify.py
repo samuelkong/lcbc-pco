@@ -7,8 +7,14 @@ from pathlib import Path
 
 household_csv_filename = 'in/ss-check-ins.csv'
 trusted_csv_filename = 'in/trusted-people.csv'
-html_header_filename = 'tpl/header.html'
+
+adult_tpl_filename = 'tpl/adult.html'
+child_tpl_filename = 'tpl/child.html'
+trusted_adult_tpl_filename = 'tpl/trusted-adult.html'
+
 html_footer_filename = 'tpl/footer.html'
+html_header_filename = 'tpl/header.html'
+
 output_filename = 'out/out.html'
 
 
@@ -100,9 +106,10 @@ for household_id in households.keys():
 	output += '<div class="section-children">'
 	output += f'<h3>Children</h3>\n'
 
-	for child in households[household_id]['children']:
-		output += '<div class="child">'
+	with open(child_tpl_filename, encoding='utf-8') as child_tpl_file:
+		child_tpl = child_tpl_file.read()
 
+	for child in households[household_id]['children']:
 		if ((child['Birthdate'] == '') and (child['Grade'] == '')):
 			birthdate = '⚠️'
 		elif ((child['Birthdate'] == '') and (child['Grade'] == '-1')):
@@ -131,38 +138,28 @@ for household_id in households.keys():
 
 		birthdate = format_birthdate(birthdate)
 
-		output += f'<h4 class="name">{child['First Name']} {child['Last Name']}</h4>\n'
-		output += f'<div><label>Gender</label>{child['Gender']}</div>'
-		output += f'<div><label>Birthdate</label>{birthdate}</div>'
-		output += f'<div><label>2025-2026 Grade</label>{grade}</div>'
-		output += (
-			'<div><input type="checkbox"> You are NOT the parent or legal ' +
-			'guardian of this child</div>'
+		output += child_tpl.format(
+			first_name=child['First Name'],
+			last_name=child['Last Name'],
+			gender=child['Gender'],
+			birthdate=birthdate,
+			grade=grade
 		)
-		output += (
-			'<div>&nbsp; &nbsp; &nbsp; &nbsp; <input type="checkbox"> You are a ' +
-			'&quot;Trusted Person&quot; for this child</div>'
-		)
-		output += '</div>\n'
 
 	output += '</div>'
 	output += '<div class="section-adults">'
 	output += f'<h3>Adults</h3>\n'
 
+	with open(adult_tpl_filename, encoding='utf-8') as adult_tpl_file:
+		adult_tpl = adult_tpl_file.read()
+
 	for adult in households[household_id]['adults']:
-		output += '<div class="adult">'
-		output += f'<h4 class="name">{adult['First Name']} {adult['Last Name']}</h4>\n'
-		output += f'<div><label>Mobile</label>{adult['Mobile Phone Number']}</div>'
-		output += f'<div><label>Email</label>{adult['Home Email']}</div>'
-		output += (
-			'<div><input type="checkbox"> Not a parent or legal guardian of the ' +
-			'children above</div>'
+		output += adult_tpl.format(
+			first_name=adult['First Name'],
+			last_name=adult['Last Name'],
+			mobile_number=adult['Mobile Phone Number'],
+			email=adult['Home Email']
 		)
-		output += (
-			'<div>&nbsp; &nbsp; &nbsp; &nbsp; <input type="checkbox"> Is a ' +
-			'&quot;Trusted Person&quot; for your family</div>'
-		)
-		output += '</div>\n'
 
 	output += '</div>'
 	output += '<div class="section-trusted-people">'
@@ -174,14 +171,15 @@ for household_id in households.keys():
 		'people is optional.</div>'
 	)
 
+	with open(trusted_adult_tpl_filename, encoding='utf-8') as trusted_adult_tpl_file:
+		trusted_adult_tpl = trusted_adult_tpl_file.read()
+
 	for trusted_adult in households[household_id]['trusted']:
-		output += '<div class="trsuted-adult">'
-		output += (
-			f'<h4 class="name">{trusted_adult['First Name']} ' +
-			f'{trusted_adult['Last Name']}</h4>\n'
+		output += trusted_adult_tpl.format(
+			first_name=trusted_adult['First Name'],
+			last_name=trusted_adult['Last Name'],
+			mobile_number=trusted_adult['Mobile Phone Number']
 		)
-		output += f'<div><label>Mobile</label>{trusted_adult['Mobile Phone Number']}</div>'
-		output += '</div>\n'
 
 	output += '</div>\n'
 	output += '</div>\n'
