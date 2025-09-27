@@ -10,6 +10,7 @@ trusted_csv_filename = 'in/trusted-people.csv'
 
 adult_tpl_filename = 'tpl/adult.html'
 child_tpl_filename = 'tpl/child.html'
+household_tpl_filename = 'tpl/household.html'
 trusted_adult_tpl_filename = 'tpl/trusted-adult.html'
 
 html_footer_filename = 'tpl/footer.html'
@@ -43,6 +44,8 @@ def str_to_bool(str):
 	return str.lower() in ['1', 't', 'true', 'y', 'yes']
 
 
+# Check for required CSV files
+
 if (not Path(household_csv_filename).is_file()):
 	print(
 		f'Please add the file {household_csv_filename}. The file should be be a CSV ' +
@@ -59,6 +62,20 @@ if (not Path(trusted_csv_filename).is_file()):
 	)
 
 	sys.exit()
+
+# Load tpl files
+
+with open(adult_tpl_filename, encoding='utf-8') as adult_tpl_file:
+	adult_tpl = adult_tpl_file.read()
+
+with open(child_tpl_filename, encoding='utf-8') as child_tpl_file:
+	child_tpl = child_tpl_file.read()
+
+with open(household_tpl_filename, encoding='utf-8') as household_tpl_file:
+	household_tpl = household_tpl_file.read()
+
+with open(trusted_adult_tpl_filename, encoding='utf-8') as trusted_adult_tpl_file:
+	trusted_adult_tpl = trusted_adult_tpl_file.read()
 
 households = {}
 
@@ -94,20 +111,7 @@ with open(trusted_csv_filename, encoding='utf-8', newline='') as trusted_csv_fil
 output = ''
 
 for household_id in households.keys():
-	output += '<div class="household">'
-	output += (
-		'<div class="intro">Thank you for taking time to verify your household ' +
-		'information. This information will help us ensure your child\'s safety. ' +
-		'<b>Instructions:</b> If any information is incorrect, please cross it out ' +
-		'and write in the correct value. If any required information is missing, ' +
-		'please fill in that information. Return to helpers at the check-in ' +
-		'station.</div>'
-	)
-	output += '<div class="section-children">'
-	output += f'<h3>Children</h3>\n'
-
-	with open(child_tpl_filename, encoding='utf-8') as child_tpl_file:
-		child_tpl = child_tpl_file.read()
+	children_list = ''
 
 	for child in households[household_id]['children']:
 		if ((child['Birthdate'] == '') and (child['Grade'] == '')):
@@ -138,7 +142,7 @@ for household_id in households.keys():
 
 		birthdate = format_birthdate(birthdate)
 
-		output += child_tpl.format(
+		children_list += child_tpl.format(
 			first_name=child['First Name'],
 			last_name=child['Last Name'],
 			gender=child['Gender'],
@@ -146,43 +150,30 @@ for household_id in households.keys():
 			grade=grade
 		)
 
-	output += '</div>'
-	output += '<div class="section-adults">'
-	output += f'<h3>Adults</h3>\n'
-
-	with open(adult_tpl_filename, encoding='utf-8') as adult_tpl_file:
-		adult_tpl = adult_tpl_file.read()
+	adults_list = ''
 
 	for adult in households[household_id]['adults']:
-		output += adult_tpl.format(
+		adults_list += adult_tpl.format(
 			first_name=adult['First Name'],
 			last_name=adult['Last Name'],
 			mobile_number=adult['Mobile Phone Number'],
 			email=adult['Home Email']
 		)
 
-	output += '</div>'
-	output += '<div class="section-trusted-people">'
-	output += f'<h3>Trusted People</h3>\n'
-	output += (
-		'<div>Trusted people are people you authorize to check-in and pick-up your ' +
-		'child. Please cross out anyone you want to remove and write in the name and ' +
-		'mobile number of anyone you want to add (e.g., a grandparent). Adding trusted ' +
-		'people is optional.</div>'
-	)
-
-	with open(trusted_adult_tpl_filename, encoding='utf-8') as trusted_adult_tpl_file:
-		trusted_adult_tpl = trusted_adult_tpl_file.read()
+	trusted_people_list = ''
 
 	for trusted_adult in households[household_id]['trusted']:
-		output += trusted_adult_tpl.format(
+		trusted_people_list += trusted_adult_tpl.format(
 			first_name=trusted_adult['First Name'],
 			last_name=trusted_adult['Last Name'],
 			mobile_number=trusted_adult['Mobile Phone Number']
 		)
 
-	output += '</div>\n'
-	output += '</div>\n'
+	output += household_tpl.format(
+		children_list=children_list,
+		adults_list=adults_list,
+		trusted_people_list=trusted_people_list
+	)
 
 with open(html_header_filename, encoding='utf-8') as header_file:
 	header = header_file.read()
