@@ -1,6 +1,17 @@
 import pco
 
 
+def is_title(household_name):
+	name = household_name.replace(' Household', '')
+
+	# Exception for names like McDonald
+
+	if (not name.startswith('Mc')):
+		return name.istitle()
+
+	return name[2:].istitle()
+
+
 print('Households with ill-formed names:')
 
 record_match_count = 0;
@@ -9,8 +20,8 @@ result = pco.PcoHousehold.search()
 
 for household in result:
 	if (household.name.endswith('Household') and
-		household.name.istitle() and
-		household.name.replace(' ', '').isascii()):
+		is_title(household.name) and
+		household.name.isascii()):
 
 		continue
 

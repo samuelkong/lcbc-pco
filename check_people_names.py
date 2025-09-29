@@ -21,6 +21,12 @@ def format_full_name(person):
 def valid_first_name(first_name):
 	if (first_name == None):
 		return False
+
+	# Exception for names like O'Brian
+
+	if (first_name[0:2] == "O'"):
+		return valid_first_name(first_name[2:])
+
 	if (not valid_name(first_name)):
 		return False
 	if (first_name.find('"') >= 0):
@@ -57,18 +63,18 @@ def valid_name(name):
 		return False
 	if (name[0].islower()):
 		return False
+
+	# Exception for initials followed by a period
+
+	if ((len(name) == 2) and (name[1] == '.')):
+		return True
+
 	if ((len(name) > 1) and name.isupper()):
 		return False
 	return True
 
 
 def valid_nickname(nickname):
-	if (nickname == None):
-		return True
-	if (not nickname[0].isalpha() and nickname[0].islower()):
-		return False
-	if (nickname.isupper()):
-		return False
 	return True
 
 
