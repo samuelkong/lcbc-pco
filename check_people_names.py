@@ -1,6 +1,23 @@
 import pco
 
 
+def format_full_name(person):
+	full_name = person.first_name
+
+	if (person.given_name != None):
+		full_name += f' ({person.given_name})'
+
+	if (person.nickname != None):
+		full_name += f' "{person.nickname}"'
+
+	if (person.middle_name != None):
+		full_name += f' {person.middle_name}'
+
+	full_name += f' {person.last_name}'
+
+	return full_name
+
+
 def valid_first_name(first_name):
 	if (first_name == None):
 		return False
@@ -72,18 +89,7 @@ for person in result:
 
 	record_match_count += 1
 
-	full_name = person.first_name
-
-	if (person.given_name != None):
-		full_name += f' ({person.given_name})'
-
-	if (person.nickname != None):
-		full_name += f' "{person.nickname}"'
-
-	if (person.middle_name != None):
-		full_name += f' {person.middle_name}'
-
-	full_name += f' {person.last_name}'
+	full_name = format_full_name(person)
 
 	print(f'{person.id}\t{full_name}')
 

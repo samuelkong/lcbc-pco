@@ -20,9 +20,9 @@ for person in result:
 
 	name = remove_ascii(full_name)
 
-	corrected_name = cc.convert(name)
+	converted_name = cc.convert(name)
 
-	if (name == corrected_name):
+	if (name == converted_name):
 		continue
 
 	record_match_count += 1
