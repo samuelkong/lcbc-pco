@@ -9,7 +9,7 @@ def remove_ascii(str):
 
 cc = OpenCC('s2t')
 
-print('Users with name in simplified chinese:')
+print('People with name in simplified Chinese:')
 
 record_match_count = 0;
 
@@ -27,6 +27,6 @@ for person in result:
 
 	record_match_count += 1
 
-	print(f'{{{person.id}}}\t{full_name} => {corrected_name}')
+	print(f'{person.id}\t{full_name}  =>  {corrected_name}')
 
 print(f'\nCount: {record_match_count}/{len(result)}')

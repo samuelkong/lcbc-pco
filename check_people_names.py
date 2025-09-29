@@ -55,7 +55,7 @@ def valid_nickname(nickname):
 	return True
 
 
-print('Users with ill-formed names:')
+print('People with ill-formed names:')
 
 record_match_count = 0;
 
@@ -83,8 +83,8 @@ for person in result:
 	if (person.middle_name != None):
 		full_name += f' {person.middle_name}'
 
-	full_name += f' {person.last_name}    {{{person.id}}}'
+	full_name += f' {person.last_name}'
 
-	print(full_name)
+	print(f'{person.id}\t{full_name}')
 
 print(f'\nCount: {record_match_count}/{len(result)}')

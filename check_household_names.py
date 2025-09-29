@@ -16,7 +16,6 @@ for household in result:
 
 	record_match_count += 1
 
-	print(f'{household.name}  ({household.primary_contact_name})    {{{household.id}}}')
-
+	print(f'{household.id}\t{household.name}  ({household.primary_contact_name})')
 
 print(f'\nCount: {record_match_count}/{len(result)}')
