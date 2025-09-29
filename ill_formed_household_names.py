@@ -3,7 +3,7 @@ import pco
 
 print('Households with ill-formed names:')
 
-ill_form_count = 0;
+record_match_count = 0;
 
 result = pco.PcoHousehold.search()
 
@@ -14,9 +14,9 @@ for household in result:
 
 		continue
 
-	ill_form_count += 1
+	record_match_count += 1
 
 	print(f'{household.name}  ({household.primary_contact_name})    {{{household.id}}}')
 
 
-print(f'\nCount: {ill_form_count}/{len(result)}')
+print(f'\nCount: {record_match_count}/{len(result)}')

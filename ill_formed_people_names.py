@@ -57,7 +57,7 @@ def valid_nickname(nickname):
 
 print('Users with ill-formed names:')
 
-ill_form_count = 0;
+record_match_count = 0;
 
 result = pco.PcoPerson.search()
 
@@ -70,7 +70,7 @@ for person in result:
 
 		continue
 
-	ill_form_count += 1
+	record_match_count += 1
 
 	full_name = person.first_name
 
@@ -87,4 +87,4 @@ for person in result:
 
 	print(full_name)
 
-print(f'\nCount: {ill_form_count}/{len(result)}')
+print(f'\nCount: {record_match_count}/{len(result)}')
