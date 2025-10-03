@@ -13,6 +13,11 @@ class PcoConfig():
 
 		return PcoConfig.config[section][option]
 
+	def getList(section, option):
+		comma_separated_str = PcoConfig.get(section, option)
+
+		return [item.strip() for item in comma_separated_str.split(',')]
+
 	def getboolean(section, option):
 		return bool(PcoConfig.get(section, option))
 

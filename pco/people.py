@@ -11,7 +11,7 @@ class PcoBaseModel:
 		if (name in self.json['attributes']):
 			return self.json['attributes'][name]
 
-		if (name == "id"):
+		if (name == 'id'):
 			return self.json['id']
 
 		return None
@@ -60,6 +60,27 @@ class PcoBaseModel:
 			result.append(model)
 
 		return result
+
+
+class PcoAddress(PcoBaseModel):
+	TYPE = 'Person'
+
+	def __getattr__(self, name):
+		if (name == 'person_id'):
+			return self.json['relationships']['person']['data']['id']
+
+		return super().__getattr__(name)
+
+	def __init__(self, json):
+		super().__init__(json)
+
+	@classmethod
+	def api_get(clazz):
+		return clazz.api.people.addresses.get
+
+	@classmethod
+	def api_search(clazz):
+		return clazz.api.people.addresses.search
 
 
 class PcoHousehold(PcoBaseModel):
