@@ -111,3 +111,24 @@ class PcoPerson(PcoBaseModel):
 	@classmethod
 	def api_search(clazz):
 		return clazz.api.people.people.search
+
+
+class PcoPhoneNumber(PcoBaseModel):
+	TYPE = 'PhoneNumber'
+
+	def __getattr__(self, name):
+		if (name == 'person_id'):
+			return self.json['relationships']['person']['data']['id']
+
+		return super().__getattr__(name)
+
+	def __init__(self, json):
+		super().__init__(json)
+
+	@classmethod
+	def api_get(clazz):
+		return clazz.api.people.phone_numbers.get
+
+	@classmethod
+	def api_search(clazz):
+		return clazz.api.people.phone_numbers.search
