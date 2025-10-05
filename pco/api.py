@@ -42,6 +42,8 @@ class PcoEndpointApi():
 		return response['data']
 
 	def search(self, params={}, return_all=True):
+		params = params.copy()
+
 		if return_all == True:
 			params['per_page'] = config.PcoConfig.get('REQUEST', 'max_page_size')
 
