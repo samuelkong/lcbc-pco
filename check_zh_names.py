@@ -27,6 +27,6 @@ for person in result:
 
 	record_match_count += 1
 
-	print(f'{person.id}\t{full_name}  =>  {corrected_name}')
+	print(f'{person.id}\t{full_name}  =>  {converted_name}')
 
 print(f'\nCount: {record_match_count}/{len(result)}')
