@@ -36,6 +36,9 @@ AND +include [People] [Age] [at least] [18] [years]
 * For more accurate result, replace age rule with:
     +include [People] [Birthdate (with year)] [on or before] [8/31/YYYY]"""
 
+checklist['Phone carrier'] =\
+"""https://api.planningcenteronline.com/explorer/people/v2/phone_numbers?order=-carrier"""
+
 
 def print_checklist_item(title, detail):
 	print(title)
