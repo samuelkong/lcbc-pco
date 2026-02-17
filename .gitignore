@@ -2,5 +2,6 @@ __pycache__
 
 /my_config.ini
 
+/people_exports/
 /ss_verify/in/
 /ss_verify/out/
