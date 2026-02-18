@@ -12,21 +12,26 @@ def is_title(household_name):
 	return name[2:].istitle()
 
 
-print('Households with ill-formed names:')
+def main():
+	print('Households with ill-formed names:')
 
-record_match_count = 0;
+	record_match_count = 0;
 
-result = pco.PcoHousehold.search()
+	result = pco.PcoHousehold.search()
 
-for household in result:
-	if (household.name.endswith('Household') and
-		is_title(household.name) and
-		household.name.isascii()):
+	for household in result:
+		if (household.name.endswith('Household') and
+			is_title(household.name) and
+			household.name.isascii()):
 
-		continue
+			continue
 
-	record_match_count += 1
+		record_match_count += 1
 
-	print(f'{household.id}\t{household.name}  ({household.primary_contact_name})')
+		print(f'{household.id}\t{household.name}  ({household.primary_contact_name})')
 
-print(f'\nCount: {record_match_count}/{len(result)}')
+	print(f'\nCount: {record_match_count}/{len(result)}')
+
+
+if __name__ == '__main__':
+	main()

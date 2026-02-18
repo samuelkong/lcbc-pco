@@ -27,6 +27,41 @@ def is_duplicate(phone):
 	return False
 
 
+def main():
+	print('Problematic phone numbers:')
+	print('User ID\tUser Name\tPhone ID\tErrors\tPhone Number')
+
+	record_match_count = 0;
+
+	result = pco.PcoPhoneNumber.search()
+
+	for phone in result:
+		error_codes = []
+
+		if (not valid_country(phone.country_code)):
+			error_codes += [ERROR_CODE_COUNTRY]
+
+		if (is_duplicate(phone)):
+			error_codes += [ERROR_CODE_DUPLICATE]
+
+		if (not valid_phone_number(phone.national)):
+			error_codes += [ERROR_CODE_NUMBER]
+
+		if (len(error_codes) == 0):
+			continue
+
+		record_match_count += 1
+
+		print(
+			f'{phone.person_id}\t{get_fullname(phone.person_id)}\t{phone.id}\t' +
+			f'{','.join(error_codes)}\t{phone.national}'
+		)
+
+	print(f'\nCount: {record_match_count}/{len(result)}')
+	print()
+	print('Check phone type at https://www.phonevalidator.com/')
+
+
 def valid_country(country_code):
 	if (country_code == 'US'):
 		return True
@@ -42,35 +77,5 @@ def valid_phone_number(national_number):
 	return re.fullmatch(pattern, national_number)
 
 
-print('Problematic phone numbers:')
-print('User ID\tUser Name\tPhone ID\tErrors\tPhone Number')
-
-record_match_count = 0;
-
-result = pco.PcoPhoneNumber.search()
-
-for phone in result:
-	error_codes = []
-
-	if (not valid_country(phone.country_code)):
-		error_codes += [ERROR_CODE_COUNTRY]
-
-	if (is_duplicate(phone)):
-		error_codes += [ERROR_CODE_DUPLICATE]
-
-	if (not valid_phone_number(phone.national)):
-		error_codes += [ERROR_CODE_NUMBER]
-
-	if (len(error_codes) == 0):
-		continue
-
-	record_match_count += 1
-
-	print(
-		f'{phone.person_id}\t{get_fullname(phone.person_id)}\t{phone.id}\t' +
-		f'{','.join(error_codes)}\t{phone.national}'
-	)
-
-print(f'\nCount: {record_match_count}/{len(result)}')
-print()
-print('Check phone type at https://www.phonevalidator.com/')
+if __name__ == '__main__':
+	main()

@@ -50,6 +50,38 @@ def is_pobox(address_parts):
 	return False
 
 
+def main():
+	print('Ill-formed addresses:')
+
+	record_match_count = 0;
+
+	result = pco.PcoAddress.search()
+
+	for address in result:
+		error_codes = []
+
+		if (address.id in config.PcoConfig.get('IGNORES', 'check_address_ignore_ids')):
+			continue
+
+		error_codes += validate_street1(address.street_line_1)
+		error_codes += validate_street2(address.street_line_2)
+		error_codes += validate_city(address.city)
+		error_codes += validate_state(address.state)
+		error_codes += validate_zip(address.zip)
+		error_codes += validate_country(address.country_name)
+
+		if (len(error_codes) == 0):
+			continue
+
+		record_match_count += 1
+
+		full_address = format_address(address)
+
+		print(f'U:{address.person_id}\tA:{address.id}\t{','.join(error_codes)}\t{full_address}')
+
+	print(f'\nCount: {record_match_count}/{len(result)}')
+
+
 def valid_street_number(address_parts):
 	number = get_address_component(address_parts, 'AddressNumber')
 
@@ -182,32 +214,5 @@ def validate_zip(zip):
 	return [ERROR_CODE_ZIP]
 
 
-print('Ill-formed addresses:')
-
-record_match_count = 0;
-
-result = pco.PcoAddress.search()
-
-for address in result:
-	error_codes = []
-
-	if (address.id in config.PcoConfig.get('IGNORES', 'check_address_ignore_ids')):
-		continue
-
-	error_codes += validate_street1(address.street_line_1)
-	error_codes += validate_street2(address.street_line_2)
-	error_codes += validate_city(address.city)
-	error_codes += validate_state(address.state)
-	error_codes += validate_zip(address.zip)
-	error_codes += validate_country(address.country_name)
-
-	if (len(error_codes) == 0):
-		continue
-
-	record_match_count += 1
-
-	full_address = format_address(address)
-
-	print(f'U:{address.person_id}\tA:{address.id}\t{','.join(error_codes)}\t{full_address}')
-
-print(f'\nCount: {record_match_count}/{len(result)}')
+if __name__ == '__main__':
+	main()

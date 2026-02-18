@@ -40,6 +40,15 @@ checklist['Phone carrier'] =\
 """https://api.planningcenteronline.com/explorer/people/v2/phone_numbers?order=-carrier"""
 
 
+def main():
+	print('Check using PCO People:\n')
+
+	for title, detail in checklist.items():
+		print_checklist_item(title, detail)
+		prompt_for_continue()
+		remove_continue_prompt()
+
+
 def print_checklist_item(title, detail):
 	print(title)
 	print('-' * 30)
@@ -47,17 +56,15 @@ def print_checklist_item(title, detail):
 	print()
 	print()
 
+
 def prompt_for_continue():
 	print('(continue)', end='\n', flush=True)
 	msvcrt.getch()
+
 
 def remove_continue_prompt():
 	print('\033[F\033[K')
 
 
-print('Check using PCO People:\n')
-
-for title, detail in checklist.items():
-	print_checklist_item(title, detail)
-	prompt_for_continue()
-	remove_continue_prompt()
+if __name__ == '__main__':
+	main()

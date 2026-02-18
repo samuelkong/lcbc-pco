@@ -18,6 +18,31 @@ def format_full_name(person):
 	return full_name
 
 
+def main():
+	print('People with ill-formed names:')
+
+	record_match_count = 0;
+
+	result = pco.PcoPerson.search()
+
+	for person in result:
+		if (valid_first_name(person.first_name) and
+			valid_last_name(person.last_name) and
+			valid_middle_name(person.middle_name) and
+			valid_given_name(person.given_name) and
+			valid_nickname(person.nickname)):
+
+			continue
+
+		record_match_count += 1
+
+		full_name = format_full_name(person)
+
+		print(f'{person.id}\t{full_name}')
+
+	print(f'\nCount: {record_match_count}/{len(result)}')
+
+
 def valid_first_name(first_name):
 	if (first_name == None):
 		return False
@@ -78,25 +103,5 @@ def valid_nickname(nickname):
 	return True
 
 
-print('People with ill-formed names:')
-
-record_match_count = 0;
-
-result = pco.PcoPerson.search()
-
-for person in result:
-	if (valid_first_name(person.first_name) and
-		valid_last_name(person.last_name) and
-		valid_middle_name(person.middle_name) and
-		valid_given_name(person.given_name) and
-		valid_nickname(person.nickname)):
-
-		continue
-
-	record_match_count += 1
-
-	full_name = format_full_name(person)
-
-	print(f'{person.id}\t{full_name}')
-
-print(f'\nCount: {record_match_count}/{len(result)}')
+if __name__ == '__main__':
+	main()
