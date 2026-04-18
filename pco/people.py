@@ -1,68 +1,9 @@
 from . import api as pco_api
 from . import cache
+from . import model
 
 
-class PcoBaseModel:
-	TYPE = None
-
-	api = pco_api.PcoApi.get_instance()
-
-	def __getattr__(self, name):
-		if (name in self.json['attributes']):
-			return self.json['attributes'][name]
-
-		if (name == 'id'):
-			return self.json['id']
-
-		return None
-
-	def __init__(self, json):
-		self.json = json
-
-	@classmethod
-	def api_get(clazz):
-		print('Error: method not implemented')
-		return None
-
-	@classmethod
-	def api_search(clazz):
-		print('Error: method not implemented')
-		return None
-
-	@classmethod
-	def get_type(clazz):
-		return clazz.TYPE
-
-	@classmethod
-	def get(clazz, id):
-		data = cache.PcoCache.get(clazz.TYPE, id)
-
-		if (data != None):
-			return clazz(data)
-
-		data = clazz.api_get()(id)
-
-		cache.PcoCache.put(data)
-
-		return clazz(data)
-
-	@classmethod
-	def search(clazz, params={}):
-		result = []
-
-		data = clazz.api_search()(params)
-
-		for datum in data:
-			cache.PcoCache.put(datum)
-
-			model = clazz(datum);
-
-			result.append(model)
-
-		return result
-
-
-class PcoAddress(PcoBaseModel):
+class PcoAddress(model.PcoBaseModel):
 	TYPE = 'Person'
 
 	def __getattr__(self, name):
@@ -83,7 +24,7 @@ class PcoAddress(PcoBaseModel):
 		return clazz.api.people.addresses.search
 
 
-class PcoHousehold(PcoBaseModel):
+class PcoHousehold(model.PcoBaseModel):
 	TYPE = 'Household'
 
 	def __init__(self, json):
@@ -98,7 +39,7 @@ class PcoHousehold(PcoBaseModel):
 		return clazz.api.people.households.search
 
 
-class PcoPerson(PcoBaseModel):
+class PcoPerson(model.PcoBaseModel):
 	TYPE = 'Person'
 
 	def __init__(self, json):
@@ -113,7 +54,7 @@ class PcoPerson(PcoBaseModel):
 		return clazz.api.people.people.search
 
 
-class PcoPhoneNumber(PcoBaseModel):
+class PcoPhoneNumber(model.PcoBaseModel):
 	TYPE = 'PhoneNumber'
 
 	def __getattr__(self, name):
