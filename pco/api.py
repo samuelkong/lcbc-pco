@@ -14,10 +14,10 @@ class PcoApi():
 		#	'calendar',
 			'check_ins',
 		#	'giving',
-		#	'groups',
+			'groups',
 			'people',
 		#	'publishing',
-		#	'registrations',
+			'registrations',
 		#	'services'
 		]
 
@@ -50,6 +50,9 @@ class PcoEndpointApi():
 		query = urlencode(params)
 
 		response = request.PcoRequest.get(self.url + '?' + query)
+
+		if (response == None):
+			return {}
 
 		response_data = response['data']
 
