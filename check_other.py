@@ -40,6 +40,10 @@ checklist['Phone carrier'] =\
 """https://api.planningcenteronline.com/explorer/people/v2/phone_numbers?order=-carrier"""
 
 
+checklist['Usage data'] =\
+"""Collect usage data."""
+
+
 def main():
 	print('Check using PCO People:\n')
 
