@@ -69,11 +69,15 @@ def main():
 def save(file_content):
 	base_filename = 'lcbc-registrations-' + date.today().strftime('%Y%m%d')
 
-	internal_filename = base_filename + '.txt'
-	zip_filename = 'backup/' + base_filename + '.zip'
+	internal_filename = base_filename + '.json'
+	nonzip_filename = 'backups/' + base_filename + '.json'
+	zip_filename = 'backups/' + base_filename + '.zip'
 
-	with zipfile.ZipFile(zip_filename, mode='w', compression=zipfile.ZIP_DEFLATED) as zip_file:
-		zip_file.writestr(internal_filename, file_content)
+	#with zipfile.ZipFile(zip_filename, mode='w', compression=zipfile.ZIP_DEFLATED) as zip_file:
+	#	zip_file.writestr(internal_filename, file_content)
+
+	with open(nonzip_filename, 'w') as file:
+		file.write(file_content)
 
 
 if __name__ == '__main__':

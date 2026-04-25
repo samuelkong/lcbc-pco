@@ -83,6 +83,7 @@ def get_group_types():
 def get_groups():
 	api = pco.PcoEndpointApi('Group', GROUPS_ENDPOINT)
 
+	# Possible values for 'archive_status': not_archived, only, include
 	response = api.search({'where[archive_status]': 'include'})
 
 	for group in response:
@@ -134,11 +135,15 @@ def main():
 def save(file_content):
 	base_filename = 'lcbc-groups-' + date.today().strftime('%Y%m%d')
 
-	internal_filename = base_filename + '.txt'
-	zip_filename = 'backup/' + base_filename + '.zip'
+	internal_filename = base_filename + '.json'
+	nonzip_filename = 'backups/' + base_filename + '.json'
+	zip_filename = 'backups/' + base_filename + '.zip'
 
-	with zipfile.ZipFile(zip_filename, mode='w', compression=zipfile.ZIP_DEFLATED) as zip_file:
-		zip_file.writestr(internal_filename, file_content)
+	#with zipfile.ZipFile(zip_filename, mode='w', compression=zipfile.ZIP_DEFLATED) as zip_file:
+	#	zip_file.writestr(internal_filename, file_content)
+
+	with open(nonzip_filename, 'w') as file:
+		file.write(file_content)
 
 
 def simplify_group_type(group_json):
