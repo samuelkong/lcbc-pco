@@ -28,6 +28,7 @@ def get_signups():
 	api = pco.PcoEndpointApi('Signup', SIGNUPS_ENDPOINT)
 
 	response = api.search()
+	#response = api.search({'where[id]': 3615282})
 
 	for signup in response:
 		signup_id = signup['id']

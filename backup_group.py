@@ -84,7 +84,7 @@ def get_groups():
 	api = pco.PcoEndpointApi('Group', GROUPS_ENDPOINT)
 
 	# Possible values for 'archive_status': not_archived, only, include
-	response = api.search({'where[archive_status]': 'include'})
+	response = api.search({'where[archive_status]': 'not_archived'})
 
 	for group in response:
 		group_id = group['id']
