@@ -6,7 +6,7 @@ import random
 import string
 
 
-INPUT_REGISTRATION_CSV = 'vbs2026/vbs-2026-registration-20260618.csv'
+INPUT_REGISTRATION_CSV = 'vbs2026/vbs-2026-registration-20260704.csv'
 OUTPUT_MANUAL_CHECKIN_CSV = 'vbs2026/manual-checkin-data.csv'
 
 
