@@ -30,7 +30,19 @@ def compare(old_people_db, new_people_db, settings):
 				continue
 
 			# Ignore custom fields
-			if ((not settings.custom) and ("::" in key)):
+			if ((not settings.custom) and ('::' in key)):
+				continue
+
+			# Ignore product usage
+			if key in (
+				'Calendar User',
+				'Check-Ins User',
+				'Groups User',
+				'People User',
+				'Publishing User',
+				'Registrations User',
+				'Services User'):
+
 				continue
 
 			old_value = old_person[key]
