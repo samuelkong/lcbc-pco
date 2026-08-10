@@ -1,6 +1,10 @@
 import argparse
+import contextlib
 import csv
+import io
 import os
+
+from datetime import date
 
 
 def compare(old_people_db, new_people_db, settings):
@@ -76,9 +80,12 @@ def main():
 	old_people_db = load_csv(args.old)
 	new_people_db = load_csv(args.new)
 
-	print()
+	buffer = io.StringIO()
 
-	compare(old_people_db, new_people_db, args)
+	with contextlib.redirect_stdout(buffer):
+		compare(old_people_db, new_people_db, args)
+
+	save_and_print(buffer.getvalue())
 
 
 def print_name(person):
@@ -91,6 +98,18 @@ def readable_file(path):
 	if not os.path.isfile(path):
 		raise argparse.ArgumentTypeError(f"The file '{path}' does not exist or is not a file.")
 	return path
+
+
+def save_and_print(content):
+	filename = 'people-changes-' + date.today().strftime('%Y%m%d') + '.txt'
+
+	with open(filename, 'w', encoding='utf-8') as file:
+		file.write(content)
+
+	print()
+	print(content)
+	print('File saved to ' + filename)
+
 
 if __name__ == '__main__':
 	main()
