@@ -6,6 +6,12 @@ from . import model
 class PcoCheckIn(model.PcoBaseModel):
 	TYPE = 'CheckIn'
 
+	def __getattr__(self, name):
+		if (name == 'person_id'):
+			return self.json['relationships']['person']['data']['id']
+
+		return super().__getattr__(name)
+
 	def __init__(self, json):
 		super().__init__(json)
 
