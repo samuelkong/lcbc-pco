@@ -1,3 +1,4 @@
+import argparse
 import json
 import pco
 import zipfile
@@ -24,11 +25,15 @@ def get_location(signup_id):
 	return response
 
 
-def get_signups():
+def get_signups(reg_id):
 	api = pco.PcoEndpointApi('Signup', SIGNUPS_ENDPOINT)
 
-	response = api.search()
-	#response = api.search({'where[id]': 3615282})
+	response = None
+
+	if (reg_id == 0):
+		response = api.search()
+	else:
+		response = api.search({'where[id]': reg_id})
 
 	for signup in response:
 		signup_id = signup['id']
@@ -62,7 +67,16 @@ def get_times(signup_id):
 
 
 def main():
-	signups_json = get_signups()
+	parser = argparse.ArgumentParser(
+		prog='py get_check_in_times.py',
+		formatter_class=argparse.RawTextHelpFormatter
+	)
+
+	parser.add_argument('regid', type=int, nargs='?', default=0, help='Registration ID')
+
+	args = parser.parse_args()
+
+	signups_json = get_signups(args.regid)
 
 	save(json.dumps(signups_json, indent=2))
 
@@ -79,6 +93,8 @@ def save(file_content):
 
 	with open(nonzip_filename, 'w') as file:
 		file.write(file_content)
+
+	print('File saved to ' + nonzip_filename)
 
 
 if __name__ == '__main__':
